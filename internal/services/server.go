@@ -65,14 +65,19 @@ func (ks *KeeperServer) SetSecret(ctx context.Context, req *pb.SetSecretRequest)
 		log.Error(err)
 		return nil, status.Error(codes.InvalidArgument, "неверный тип секрета")
 	}
-	login := ""
-	authData, err := ks.DB.GetAuthData(ctx, login)
-	if err != nil {
-		log.Error(err)
-		return nil, status.Error(codes.Unavailable, "ошибка данных")
-	}
-	helpers.EncodeHashSha512(authData.HashPassmaster)
+	//login := "qwer"
+	//authData, err := ks.DB.GetAuthData(ctx, login)
+	//if err != nil {
+	//	log.Error(err)
+	//	return nil, status.Error(codes.Unavailable, "ошибка данных")
+	//}
+	//helpers.EncodeHashSha512(authData.HashPassmaster)
 
+	aes, err := helpers.EncryptAES([]byte("qwerrty"), helpers.EncodeHashSha512("q2312312312312"))
+	log.Error(err)
+	log.Info(string(aes))
+	aes, err = helpers.DecryptAES(aes, helpers.EncodeHashSha512("q2312312312312"))
+	log.Info(string(aes))
 	//switch expr {
 	//
 	//}

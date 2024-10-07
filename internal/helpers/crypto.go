@@ -22,8 +22,8 @@ func EncodeHashSha512(value string) string {
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
-func encrypt(plaintext []byte, secretKey string) ([]byte, error) {
-	tAES, err := aes.NewCipher([]byte(secretKey))
+func EncryptAES(plaintext []byte, secretKey string) ([]byte, error) {
+	tAES, err := aes.NewCipher([]byte(secretKey)[:32])
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +42,8 @@ func encrypt(plaintext []byte, secretKey string) ([]byte, error) {
 	return ciphertext, nil
 }
 
-func decrypt(ciphertext []byte, secretKey string) ([]byte, error) {
-	tAES, err := aes.NewCipher([]byte(secretKey))
+func DecryptAES(ciphertext []byte, secretKey string) ([]byte, error) {
+	tAES, err := aes.NewCipher([]byte(secretKey)[:32])
 	if err != nil {
 		return nil, err
 	}
