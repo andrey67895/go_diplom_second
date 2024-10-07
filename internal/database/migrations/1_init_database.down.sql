@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS withdrawn_balance;
+DROP TABLE IF EXISTS current_balance;
+DROP TABLE IF EXISTS auth;
+

@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package goph_keeper;
+
+
+option go_package = "goph_keeper/proto";
+
+
+message Secret {
+  message Data {
+    oneof Variant {
+      AuthenticationData Authentication = 11 [json_name = "authentication"];
+      string Text = 12 [json_name = "text"];
+      bytes Any = 13 [json_name = "any"];
+      CreditCardData CreditCardData = 14 [json_name = "credit_card"];
+    }
+  }
+  string ID = 1 [json_name = "name"];
+  string Type = 2 [json_name = "type"];
+  string Meta = 3 [json_name = "meta"];
+  Data SecretData = 4 [json_name = "secret_value"];
+  string MasterKey = 5 [json_name = "master_key"];
+}
+
+message AuthenticationData {
+  string Login = 1 [json_name = "login"];
+  string Password = 2 [json_name = "password"];
+}
+
+message CreditCardData {
+  string Number = 1 [json_name = "number"];
+  string Expired = 2 [json_name = "expired"];
+  string Holder = 3 [json_name = "holder"];
+  string CVC = 4 [json_name = "cvc"];
+}
+
+message RegisterRequest {
+  string Login = 1 [json_name = "login"];
+  string Password = 2 [json_name = "password"];
+  string MasterPassword = 3 [json_name = "master_password"];
+}
+
+message RegisterResponse {
+  string AccessToken = 1 [json_name = "access_token"];
+}
+
+
+message LoginRequest {
+  string Login = 1 [json_name = "login"];
+  string Password = 2 [json_name = "password"];
+}
+
+message LoginResponse {
+  string AccessToken = 1 [json_name = "access_token"];
+}
+
+message SetSecretRequest {
+  Secret Secret = 1 [json_name = "secret"];
+}
+
+message SetSecretResponse {
+}
+
+message GetSecretRequest {
+  string ID = 1 [json_name = "id"];
+}
+
+message GetSecretResponse {
+  Secret Secret = 1 [json_name = "secret"];
+}
+
+message GetAllSecretsRequest {
+}
+
+message GetAllSecretsResponse {
+  repeated Secret Secrets = 1 [json_name = "secrets"];
+}
+
+message RemoveSecretRequest {
+  string ID = 1 [json_name = "id"];
+}
+
+message RemoveSecretResponse {}
+
+message Ping{}
+
+
+
+service KeeperService {
+  rpc GetPing(Ping) returns (Ping) {}
+  rpc Register(RegisterRequest) returns (RegisterResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc SetSecret(SetSecretRequest) returns (SetSecretResponse) {}
+  rpc GetSecret(GetSecretRequest) returns (GetSecretResponse) {}
+  rpc GetAllSecrets(GetAllSecretsRequest) returns (GetAllSecretsResponse) {}
+  rpc RemoveSecret(RemoveSecretRequest) returns (RemoveSecretResponse) {}
+}
+
+//пары логин/пароль;
+//произвольные текстовые данные;
+//произвольные бинарные данные;
+//данные банковских карт.
