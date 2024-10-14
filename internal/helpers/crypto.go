@@ -1,13 +1,11 @@
 package helpers
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
 	"crypto/hmac"
-	"crypto/rand"
 	"crypto/sha256"
 	"crypto/sha512"
 	"fmt"
+	"strings"
 )
 
 func EncodeHashSha256(value string) string {
@@ -22,41 +20,12 @@ func EncodeHashSha512(value string) string {
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
-func EncryptAES(plaintext []byte, secretKey string) ([]byte, error) {
-	tAES, err := aes.NewCipher([]byte(secretKey)[:32])
-	if err != nil {
-		return nil, err
-	}
+func EncryptDecrypt(input, key string) string {
+	kL := len(key)
 
-	gcm, err := cipher.NewGCM(tAES)
-	if err != nil {
-		return nil, err
+	var tmp []string
+	for i := 0; i < len(input); i++ {
+		tmp = append(tmp, string(input[i]^key[i%kL]))
 	}
-	nonce := make([]byte, gcm.NonceSize())
-	_, err = rand.Read(nonce)
-	if err != nil {
-		return nil, err
-	}
-	ciphertext := gcm.Seal(nonce, nonce, plaintext, nil)
-
-	return ciphertext, nil
-}
-
-func DecryptAES(ciphertext []byte, secretKey string) ([]byte, error) {
-	tAES, err := aes.NewCipher([]byte(secretKey)[:32])
-	if err != nil {
-		return nil, err
-	}
-	gcm, err := cipher.NewGCM(tAES)
-	if err != nil {
-		return nil, err
-	}
-	nonceSize := gcm.NonceSize()
-	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
-	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return plaintext, nil
+	return strings.Join(tmp, "")
 }

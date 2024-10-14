@@ -5,13 +5,17 @@ package goph_keeper;
 
 option go_package = "goph_keeper/proto";
 
+message File {
+  string Filename = 1 [json_name = "filename"];
+  bytes Any = 2 [json_name = "any"];
+}
 
 message Secret {
   message Data {
     oneof Variant {
       AuthenticationData Authentication = 11 [json_name = "authentication"];
       string Text = 12 [json_name = "text"];
-      bytes Any = 13 [json_name = "any"];
+      File File = 13 [json_name = "file"];
       CreditCardData CreditCardData = 14 [json_name = "credit_card"];
     }
   }
@@ -19,7 +23,6 @@ message Secret {
   string Type = 2 [json_name = "type"];
   string Meta = 3 [json_name = "meta"];
   Data SecretData = 4 [json_name = "secret_value"];
-  string MasterKey = 5 [json_name = "master_key"];
 }
 
 message AuthenticationData {
@@ -48,6 +51,7 @@ message RegisterResponse {
 message LoginRequest {
   string Login = 1 [json_name = "login"];
   string Password = 2 [json_name = "password"];
+  string MasterPassword = 3 [json_name = "master_password"];
 }
 
 message LoginResponse {
@@ -56,6 +60,14 @@ message LoginResponse {
 
 message SetSecretRequest {
   Secret Secret = 1 [json_name = "secret"];
+}
+
+message UpdateSecretRequest {
+  string ID = 1 [json_name = "id"];
+  Secret Secret = 2 [json_name = "secret"];
+}
+
+message UpdateSecretResponse {
 }
 
 message SetSecretResponse {
@@ -95,8 +107,3 @@ service KeeperService {
   rpc GetAllSecrets(GetAllSecretsRequest) returns (GetAllSecretsResponse) {}
   rpc RemoveSecret(RemoveSecretRequest) returns (RemoveSecretResponse) {}
 }
-
-//пары логин/пароль;
-//произвольные текстовые данные;
-//произвольные бинарные данные;
-//данные банковских карт.

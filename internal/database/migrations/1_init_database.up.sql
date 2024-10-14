@@ -14,12 +14,13 @@ CREATE TABLE IF NOT EXISTS secret_type (
 CREATE TABLE IF NOT EXISTS secret (
                                     id uuid not null primary key default uuid_generate_v4(),
                                     encoded bytea,
-                                    type uuid not null references secret_type(id)
+                                    type uuid not null references secret_type(id),
+                                    metadata text
 );
 
 CREATE TABLE IF NOT EXISTS auth_secret_ref (
                                                     auth_id uuid not null references auth(id),
-                                                    secret_id uuid not null references secret(id),
+                                                    secret_id uuid not null unique references secret(id),
                                                     PRIMARY KEY (auth_id, secret_id)
 );
 
@@ -33,7 +34,7 @@ INSERT INTO secret_type (id, name)
 VALUES (DEFAULT, 'WORD');
 
 INSERT INTO secret_type (id, name)
-VALUES (DEFAULT, 'CART');
+VALUES (DEFAULT, 'CARD');
 
 INSERT INTO secret_type (id, name)
-VALUES (DEFAULT, 'FILE');
+VALUES (DEFAULT, 'LOG_PASS');

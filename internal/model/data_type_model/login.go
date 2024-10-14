@@ -3,12 +3,12 @@ package data_type_model
 import "fmt"
 
 type AuthData struct {
-	ID       string
-	Login    string
-	Password string
-	Metadata string
+	Authentication struct {
+		Login    string `json:"Login"`
+		Password string `json:"Password"`
+	} `json:"Authentication"`
 }
 
 func (c *AuthData) toText() string {
-	return fmt.Sprintf("%s:%s:%s:%s", c.ID, c.Login, c.Password, c.Metadata)
+	return fmt.Sprintf("%s:%s", c.Authentication.Login, c.Authentication.Password)
 }

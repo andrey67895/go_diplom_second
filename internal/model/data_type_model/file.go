@@ -1,10 +1,8 @@
 package data_type_model
 
-import "github.com/google/uuid"
-
-type File struct {
-	ID       uuid.UUID
-	Filename string
-	Data     []byte //archive
-	Metadata string
+type FileData struct {
+	File struct {
+		Filename string `json:"Filename"`
+		Data     []byte `json:"Any"`
+	} `json:"File"`
 }

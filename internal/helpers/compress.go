@@ -3,6 +3,7 @@ package helpers
 import (
 	"bytes"
 	"compress/gzip"
+	"io"
 )
 
 func Compress(data []byte) []byte {
@@ -19,4 +20,16 @@ func Compress(data []byte) []byte {
 		return nil
 	}
 	return b.Bytes()
+}
+
+func DeCompress(data []byte) ([]byte, error) {
+	zr, err := gzip.NewReader(bytes.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+	all, err := io.ReadAll(zr)
+	if err != nil {
+		return nil, err
+	}
+	return all, nil
 }
