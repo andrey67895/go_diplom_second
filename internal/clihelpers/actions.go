@@ -158,7 +158,7 @@ func (cli *KeeperCli) GetSecretByID(c *cli.Context) {
 
 func (cli *KeeperCli) SaveSecret(c *cli.Context) {
 	query := "Тип данных для сохранения:"
-	step, err := cli.UI.Select(query, []string{"Банковская карта", "Текст", "Файл", "Логин/Пароль", "Назад"}, &input.Options{
+	step, _ := cli.UI.Select(query, []string{"Банковская карта", "Текст", "Файл", "Логин/Пароль", "Назад"}, &input.Options{
 		Loop: true,
 	})
 	switch step {
@@ -169,17 +169,17 @@ func (cli *KeeperCli) SaveSecret(c *cli.Context) {
 			Loop:     true,
 		})
 		query = "Введите CardExpired(формат - 01/11)(Поле необязательное)"
-		expired, err := cli.UI.Ask(query, &input.Options{
+		expired, _ := cli.UI.Ask(query, &input.Options{
 			Required: false,
 			Loop:     true,
 		})
 		query = "Введите Holder (Поле необязательное)"
-		holder, err := cli.UI.Ask(query, &input.Options{
+		holder, _ := cli.UI.Ask(query, &input.Options{
 			Required: false,
 			Loop:     true,
 		})
 		query = "Введите CVC (Поле необязательное)"
-		cvc, err := cli.UI.Ask(query, &input.Options{
+		cvc, _ := cli.UI.Ask(query, &input.Options{
 			Required:    false,
 			Loop:        true,
 			Mask:        true,
@@ -198,7 +198,7 @@ func (cli *KeeperCli) SaveSecret(c *cli.Context) {
 		md := metadata.New(map[string]string{"token": cli.Token})
 		md.Set("master_key", cli.MPassword)
 		ctx := metadata.NewOutgoingContext(c.Context, md)
-		_, err = cli.KeeperServiceClient.SetSecret(ctx, &req, grpc.Header(&md))
+		_, err := cli.KeeperServiceClient.SetSecret(ctx, &req, grpc.Header(&md))
 		if err != nil {
 			cli.Log.Error(err)
 		}
@@ -217,7 +217,7 @@ func (cli *KeeperCli) SaveSecret(c *cli.Context) {
 		md := metadata.New(map[string]string{"token": cli.Token})
 		md.Set("master_key", cli.MPassword)
 		ctx := metadata.NewOutgoingContext(c.Context, md)
-		_, err = cli.KeeperServiceClient.SetSecret(ctx, &req, grpc.Header(&md))
+		_, err := cli.KeeperServiceClient.SetSecret(ctx, &req, grpc.Header(&md))
 		if err != nil {
 			cli.Log.Error(err)
 		}
@@ -251,12 +251,12 @@ func (cli *KeeperCli) SaveSecret(c *cli.Context) {
 		return
 	case "Логин/Пароль":
 		query := "Введите login:"
-		login, err := cli.UI.Ask(query, &input.Options{
+		login, _ := cli.UI.Ask(query, &input.Options{
 			Required: true,
 			Loop:     true,
 		})
 		query = "Введите password"
-		pass, err := cli.UI.Ask(query, &input.Options{
+		pass, _ := cli.UI.Ask(query, &input.Options{
 			Required: true,
 			Loop:     true,
 		})
@@ -271,7 +271,7 @@ func (cli *KeeperCli) SaveSecret(c *cli.Context) {
 		md := metadata.New(map[string]string{"token": cli.Token})
 		md.Set("master_key", cli.MPassword)
 		ctx := metadata.NewOutgoingContext(c.Context, md)
-		_, err = cli.KeeperServiceClient.SetSecret(ctx, &req, grpc.Header(&md))
+		_, err := cli.KeeperServiceClient.SetSecret(ctx, &req, grpc.Header(&md))
 		if err != nil {
 			cli.Log.Error(err)
 		}
@@ -279,7 +279,6 @@ func (cli *KeeperCli) SaveSecret(c *cli.Context) {
 	case "Назад":
 		return
 	}
-	return
 }
 
 func (cli *KeeperCli) RemoveSecretByID(c *cli.Context) {
